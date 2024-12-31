@@ -1,0 +1,297 @@
+<LoginScreen>:
+    name: "login"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Widget:
+            size_hint_y: 0.2
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: None, None
+            size: (402, 300) if root.width <= 480 else (600, 400)
+            pos_hint: {"center_x": 0.5}
+            spacing: dp(20)
+
+            Label:
+                text: "Masukan nama anda"
+                font_size: sp(28)
+                bold: True
+                halign: "center"
+                valign: "middle"
+                color: 0, 0, 0, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: "Nama hanya dapat di isi sekali dan tidak dapat di rubah"
+                font_size: sp(16)
+                halign: "center"
+                valign: "middle"
+                color: 0, 0, 0, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Widget:
+                size_hint_y: None
+                height: dp(30)
+
+            TextInput:
+                id: username_input
+                hint_text: "Enter your username"
+                font_size: sp(18)
+                multiline: False
+                background_color: (0.95, 0.95, 0.95, 1)
+                padding: [dp(10), dp(10)]
+                size_hint: 1, None
+                height: dp(50)
+
+            Widget:
+                size_hint_y: None
+                height: dp(20)
+
+            Button:
+                text: "Login"
+                background_color: (0.09, 0.76, 0.57, 1)
+                font_size: sp(18)
+                size_hint: 1, None
+                height: dp(50)
+                on_press: self.background_color = (0.09, 0.76, 0.57, 1)
+                on_release:
+                    self.background_color = (0.07, 0.6, 0.45, 1)
+                    root.login()
+
+        Widget:
+            size_hint_y: 0.2
+
+<HomePage>:
+    name: "HomePage"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 0.87, 0.87, 0.87, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(80)
+            spacing: dp(10)
+            padding: [dp(10), dp(10)]
+            canvas.before:
+                Color:
+                    rgba: 0.09, 0.76, 0.57, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                id: name_label
+                text: "NAMA ANAK"
+                font_size: sp(24)
+                color: 1, 1, 1, 1
+                bold: True
+                size_hint_x: 0.8
+                valign: "middle"
+                halign: "left"
+                text_size: self.size
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(5)
+                size_hint_x: 0.2
+                pos_hint: {"center_y": 0.5}
+
+                Image:
+                    source: "assets/crown_icons.png"
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    pos_hint: {"center_y": 0.5}
+
+                Label:
+                    text: "300"
+                    font_size: sp(18)
+                    color: 1, 1, 1, 1
+                    valign: "middle"
+                    halign: "center"
+                    text_size: self.size
+
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            padding: dp(10)
+            size_hint: None, None
+            size: self.minimum_size
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: None, None
+                size: dp(160), dp(200)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0.8, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+
+                BoxLayout:
+                    padding: dp(10)
+                    size_hint: None, None
+                    size: dp(120), dp(120)
+                    pos_hint: {"center_x": 0.5}
+
+                    Image:
+                        source: "assets/level-1.png"
+                        size_hint: None, None
+                        size: dp(100), dp(100)
+                        pos_hint: {"center_x": 0.5}
+
+                Label:
+                    text: "Level 1 Penjumlahan"
+                    font_size: sp(16)
+                    color: 1, 1, 1, 1
+                    halign: "center"
+
+                BoxLayout:
+                    padding: [dp(10), dp(5)]
+                    size_hint: 1, None
+                    height: self.minimum_height
+                    pos_hint: {"center_x": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(5)]
+
+                    Label:
+                        text: "My Bestscore : 100"
+                        font_size: sp(14)
+                        color: 0, 0, 0, 1
+                        halign: "center"
+                        valign: "middle"
+                        size_hint: None, None
+                        size: self.texture_size
+                        text_size: None, None
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: None, None
+                size: dp(160), dp(200)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0.8, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+
+                BoxLayout:
+                    padding: dp(10)
+                    size_hint: None, None
+                    size: dp(120), dp(120)
+                    pos_hint: {"center_x": 0.5}
+
+                    Image:
+                        source: "assets/level-2.png"
+                        size_hint: None, None
+                        size: dp(100), dp(100)
+                        pos_hint: {"center_x": 0.5}
+
+                Label:
+                    text: "Level 2 Pengurangan"
+                    font_size: sp(16)
+                    color: 1, 1, 1, 1
+                    halign: "center"
+
+                BoxLayout:
+                    padding: [dp(10), dp(5)]
+                    size_hint: 1, None
+                    height: self.minimum_height
+                    pos_hint: {"center_x": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(5)]
+
+                    Label:
+                        text: "My Bestscore : 100"
+                        font_size: sp(14)
+                        color: 0, 0, 0, 1
+                        halign: "center"
+                        valign: "middle"
+                        size_hint: None, None
+                        size: self.texture_size
+                        text_size: None, None
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: None, None
+                size: dp(160), dp(200)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0.8, 0.6, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+
+                BoxLayout:
+                    padding: dp(10)
+                    size_hint: None, None
+                    size: dp(120), dp(120)
+                    pos_hint: {"center_x": 0.5}
+
+                    Image:
+                        source: "assets/level-3.png"
+                        size_hint: None, None
+                        size: dp(100), dp(100)
+                        pos_hint: {"center_x": 0.5}
+
+                Label:
+                    text: "Level 3 Perkalian"
+                    font_size: sp(16)
+                    color: 1, 1, 1, 1
+                    halign: "center"
+
+                BoxLayout:
+                    padding: [dp(10), dp(5)]
+                    size_hint: 1, None
+                    height: self.minimum_height
+                    pos_hint: {"center_x": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(5)]
+
+                    Label:
+                        text: "My Bestscore : 100"
+                        font_size: sp(14)
+                        color: 0, 0, 0, 1
+                        halign: "center"
+                        valign: "middle"
+                        size_hint: None, None
+                        size: self.texture_size
+                        text_size: None, None
