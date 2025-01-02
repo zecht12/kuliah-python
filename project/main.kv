@@ -1,7 +1,10 @@
-<LoginScreen>:
-    name: "login"
+<RegisterScreen>:
+    name: "register"
     BoxLayout:
         orientation: "vertical"
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: None, None
+        size: dp(300), dp(400)
         padding: dp(20)
         spacing: dp(10)
         canvas.before:
@@ -11,69 +14,134 @@
                 pos: self.pos
                 size: self.size
 
-        Widget:
-            size_hint_y: 0.2
+        Label:
+            text: "Daftar Pengguna Baru"
+            font_size: sp(28)
+            bold: True
+            halign: "center"
+            valign: "middle"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: username_input
+            hint_text: "Masukkan nama pengguna"
+            font_size: sp(18)
+            multiline: False
+            size_hint: 1, None
+            height: dp(50)
+
+        TextInput:
+            id: password_input
+            hint_text: "Masukkan kata sandi"
+            font_size: sp(18)
+            multiline: False
+            password: True
+            size_hint: 1, None
+            height: dp(50)
+
+        Button:
+            text: "Daftar"
+            background_color: (0.09, 0.76, 0.57, 1)
+            font_size: sp(18)
+            size_hint: 1, None
+            height: dp(50)
+            on_release:
+                root.register()
 
         BoxLayout:
-            orientation: "vertical"
-            size_hint: None, None
-            size: (402, 300) if root.width <= 480 else (600, 400)
-            pos_hint: {"center_x": 0.5}
-            spacing: dp(20)
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(40)
 
             Label:
-                text: "Masukan nama anda"
-                font_size: sp(28)
-                bold: True
-                halign: "center"
-                valign: "middle"
-                color: 0, 0, 0, 1
-                size_hint_y: None
-                height: self.texture_size[1]
-
-            Label:
-                text: "Nama hanya dapat di isi sekali dan tidak dapat di rubah"
+                text: "Sudah punya akun?"
                 font_size: sp(16)
-                halign: "center"
-                valign: "middle"
-                color: 0, 0, 0, 1
-                size_hint_y: None
-                height: self.texture_size[1]
-
-            Widget:
-                size_hint_y: None
-                height: dp(30)
-
-            TextInput:
-                id: username_input
-                hint_text: "Enter your username"
-                font_size: sp(18)
-                multiline: False
-                background_color: (0.95, 0.95, 0.95, 1)
-                padding: [dp(10), dp(10)]
-                size_hint: 1, None
-                height: dp(50)
-
-            Widget:
-                size_hint_y: None
-                height: dp(20)
+                color: 0, 0, 0.7, 1
 
             Button:
-                text: "Login"
-                background_color: (0.09, 0.76, 0.57, 1)
-                font_size: sp(18)
-                size_hint: 1, None
-                height: dp(50)
-                on_press: self.background_color = (0.09, 0.76, 0.57, 1)
-                on_release:
-                    self.background_color = (0.07, 0.6, 0.45, 1)
-                    root.login()
+                text: "Masuk"
+                font_size: sp(16)
+                color: 0, 0, 0.7, 1
+                size_hint_x: None
+                width: dp(80)
+                background_color: (1, 1, 1, 0)
+                on_release: app.root.current = "login"
 
-        Widget:
-            size_hint_y: 0.2
+<LoginScreen>:
+    name: "login"
+    BoxLayout:
+        orientation: "vertical"
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: None, None
+        size: dp(300), dp(400)
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Masuk"
+            font_size: sp(28)
+            bold: True
+            halign: "center"
+            valign: "middle"
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: username_input
+            hint_text: "Masukkan nama pengguna"
+            font_size: sp(18)
+            multiline: False
+            size_hint: 1, None
+            height: dp(50)
+
+        TextInput:
+            id: password_input
+            hint_text: "Masukkan kata sandi"
+            font_size: sp(18)
+            multiline: False
+            password: True
+            size_hint: 1, None
+            height: dp(50)
+
+        Button:
+            text: "Masuk"
+            background_color: (0.09, 0.76, 0.57, 1)
+            font_size: sp(18)
+            size_hint: 1, None
+            height: dp(50)
+            on_release:
+                root.login()
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(40)
+
+            Label:
+                text: "Belum punya akun?"
+                font_size: sp(16)
+                color: 0, 0, 0.7, 1
+
+            Button:
+                text: "Daftar"
+                font_size: sp(16)
+                color: 0, 0, 0.7, 1
+                size_hint_x: None
+                width: dp(80)
+                background_color: (1, 1, 1, 0)
+                on_release: app.root.current = "register"
 
 <HomePage>:
-    name: "HomePage"
+    name: "homepage"
     BoxLayout:
         orientation: "vertical"
         padding: dp(20)
@@ -86,6 +154,7 @@
                 size: self.size
 
         BoxLayout:
+            id: user_info_box
             orientation: "horizontal"
             size_hint_y: None
             height: dp(80)
@@ -122,7 +191,8 @@
                     pos_hint: {"center_y": 0.5}
 
                 Label:
-                    text: "300"
+                    id: score_label
+                    text: "0"
                     font_size: sp(18)
                     color: 1, 1, 1, 1
                     valign: "middle"
@@ -138,6 +208,7 @@
             pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             BoxLayout:
+                id: level_1_box
                 orientation: "vertical"
                 size_hint: None, None
                 size: dp(160), dp(200)
@@ -295,3 +366,101 @@
                         size_hint: None, None
                         size: self.texture_size
                         text_size: None, None
+
+<QuizPenjumlahanScreen>:
+    name: "quiz_penjumlahan"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        # Header: Timer, Progress Bar, and Score
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(50)
+
+            # Timer
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(5)
+                Label:
+                    text: "⏱"
+                    font_size: sp(16)
+                    color: (0, 0, 0, 1)
+                Label:
+                    id: timer_label
+                    text: "0:06"
+                    font_size: sp(16)
+                    color: (0, 0, 0, 1)
+
+            # Progress Bar
+            ProgressBar:
+                id: progress_bar
+                max: 100
+                value: 40
+                size_hint_x: 2
+
+            # Score
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(5)
+                Label:
+                    id: score_label
+                    text: "10"
+                    font_size: sp(16)
+                    color: (0, 0, 0, 1)
+                Label:
+                    text: "👑"
+                    font_size: sp(16)
+                    color: (0, 0, 0, 1)
+
+        # Question Label
+        Label:
+            id: question_label
+            text: "7 × 8 = ?"
+            font_size: sp(32)
+            halign: "center"
+            valign: "middle"
+            color: (0, 0, 0, 1)
+            size_hint_y: None
+            height: dp(80)
+
+        # Options
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            size_hint_y: None
+            height: dp(200)
+
+            Button:
+                id: option_1
+                text: "56"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_2
+                text: "49"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_3
+                text: "28"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_4
+                text: "14"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
