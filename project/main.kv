@@ -265,6 +265,7 @@
                         text_size: None, None
 
             BoxLayout:
+                id: level_2_box
                 orientation: "vertical"
                 size_hint: None, None
                 size: dp(160), dp(200)
@@ -318,6 +319,7 @@
                         text_size: None, None
 
             BoxLayout:
+                id: level_3_box
                 orientation: "vertical"
                 size_hint: None, None
                 size: dp(160), dp(200)
@@ -493,6 +495,254 @@
             Button:
                 id: option_4
                 text: "36"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+<QuizPenguranganScreen>:
+    name: "quiz_pengurangan"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        ImageButton:
+            source: "assets/back.png"
+            size_hint: None, None
+            size: dp(30), dp(30)
+            on_release: app.root.current = "homepage"
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(50)
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_x: 0.5
+                spacing: dp(5)
+
+                Image:
+                    source: "assets/stopwatch.png"
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+
+                Label:
+                    id: timer_label
+                    text: "0:10"
+                    font_size: sp(20)
+                    halign: "left"
+                    valign: "middle"
+                    color: (0, 0, 0, 1)
+                    text_size: self.size
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: dp(50)
+                padding: dp(0), dp(0), dp(10), dp(0)
+                spacing: dp(5)
+
+                Widget:
+                    size_hint_x: 1
+
+                Image:
+                    source: "assets/crown_icons.png"
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    allow_stretch: True
+                    keep_ratio: True
+
+                Label:
+                    id: score_label
+                    text: "0"
+                    font_size: sp(20)
+                    size_hint: None, None
+                    size: self.texture_size
+                    valign: "middle"
+                    halign: "left"
+                    color: (0, 0, 0, 1)
+
+        ProgressBar:
+            id: progress_bar
+            size_hint_y: None
+            height: dp(20)
+            max: 100
+            value: 0
+
+        Label:
+            id: question_label
+            text: "12 - 5 = ?"
+            font_size: sp(28)
+            halign: "center"
+            valign: "middle"
+            color: (0, 0, 0, 1)
+            text_size: self.size
+
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            size_hint_y: None
+            height: dp(200)
+
+            Button:
+                id: option_1
+                text: "7"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_2
+                text: "5"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_3
+                text: "6"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_4
+                text: "8"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+<QuizPerkalianScreen>:
+    name: "quiz_perkalian"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        ImageButton:
+            source: "assets/back.png"
+            size_hint: None, None
+            size: dp(30), dp(30)
+            on_release: app.root.current = "homepage"
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(50)
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_x: 0.5
+                spacing: dp(5)
+
+                Image:
+                    source: "assets/stopwatch.png"
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+
+                Label:
+                    id: timer_label
+                    text: "0:10"
+                    font_size: sp(20)
+                    halign: "left"
+                    valign: "middle"
+                    color: (0, 0, 0, 1)
+                    text_size: self.size
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: dp(50)
+                padding: dp(0), dp(0), dp(10), dp(0)
+                spacing: dp(5)
+
+                Widget:
+                    size_hint_x: 1
+
+                Image:
+                    source: "assets/crown_icons.png"
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    allow_stretch: True
+                    keep_ratio: True
+
+                Label:
+                    id: score_label
+                    text: "0"
+                    font_size: sp(20)
+                    size_hint: None, None
+                    size: self.texture_size
+                    valign: "middle"
+                    halign: "left"
+                    color: (0, 0, 0, 1)
+
+        ProgressBar:
+            id: progress_bar
+            size_hint_y: None
+            height: dp(20)
+            max: 100
+            value: 0
+
+        Label:
+            id: question_label
+            text: "3 x 4 = ?"
+            font_size: sp(28)
+            halign: "center"
+            valign: "middle"
+            color: (0, 0, 0, 1)
+            text_size: self.size
+
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            size_hint_y: None
+            height: dp(200)
+
+            Button:
+                id: option_1
+                text: "12"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_2
+                text: "9"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_3
+                text: "10"
+                font_size: sp(24)
+                background_normal: ""
+                background_color: (0, 0.8, 0.6, 1)
+                on_release: root.check_answer(self.text)
+
+            Button:
+                id: option_4
+                text: "11"
                 font_size: sp(24)
                 background_normal: ""
                 background_color: (0, 0.8, 0.6, 1)
