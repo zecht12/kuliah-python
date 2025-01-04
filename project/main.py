@@ -11,6 +11,8 @@ from kivy.metrics import dp, sp
 from kivy.core.window import Window
 import random
 from kivy.clock import Clock
+from kivy.uix.image import Image
+from kivy.uix.behaviors import ButtonBehavior
 
 Window.clearcolor = (1, 1, 1, 1)
 
@@ -255,7 +257,10 @@ class QuizPenjumlahanScreen(Screen):
             options = list(wrong_answers) + [correct_answer]
             random.shuffle(options)
 
-            self.ids.question_label.text = f"{number1} + {number2} = ?"
+            self.ids.question_label.text = (
+                f"[b]{number1} + {number2} = [color=#FF0000]?[/color][/b]"
+            )
+            self.ids.question_label.markup = True
             for i, option in enumerate(options):
                 self.ids[f"option_{i+1}"].text = str(option)
 
@@ -265,12 +270,24 @@ class QuizPenjumlahanScreen(Screen):
         else:
             self.end_quiz()
 
+    def update_score_label(self):
+        """Update the score label in the UI."""
+        self.ids.score_label.text = str(self.current_score)
+
     def check_answer(self, selected_answer):
         """Check if the selected answer is correct."""
-        correct_answer = eval(self.ids.question_label.text.split('=')[0].strip())
-        if int(selected_answer) == correct_answer:
-            self.current_score += 5
-        self.generate_question()
+        question_text = self.ids.question_label.text
+        clean_question = question_text.replace('[b]', '').replace('[/b]', '').replace('[color=#FF0000]', '').replace('[/color]', '').strip()
+        math_expression = clean_question.split('=')[0].strip()
+
+        try:
+            correct_answer = eval(math_expression)
+            if int(selected_answer) == correct_answer:
+                self.current_score += 5
+                self.update_score_label()
+            self.generate_question()
+        except Exception as e:
+            print(f"Error while evaluating the answer: {e}")
 
     def update_score_in_store(self):
         """Update the score in the JSON store for Level 1."""
@@ -286,22 +303,53 @@ class QuizPenjumlahanScreen(Screen):
             )
             store.put('user', **user_data)
 
+    def go_to_homepage(self):
+        """Navigate to the homepage."""
+        self.manager.current = 'homepage'
+
     def end_quiz(self):
         """Handle the end of the quiz."""
         Clock.unschedule(self.update_timer)
         self.update_score_in_store()
 
+        layout = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
+
+        score_label = Label(
+            text=str(self.current_score),
+            font_size=sp(32),
+            color=(0, 0, 0, 1),
+            size_hint=(1, None),
+            height=dp(50),
+            halign="center",
+            valign="middle",
+        )
+        layout.add_widget(score_label)
+
+        exit_button = Button(
+            text="KELUAR",
+            size_hint=(1, None),
+            height=dp(50),
+            background_color=(1, 0, 0, 1),
+            color=(1, 1, 1, 1),
+            on_release=lambda *args: (self.go_to_homepage(), popup.dismiss()),
+        )
+        layout.add_widget(exit_button)
+
         popup = Popup(
-            title="Quiz Selesai",
-            content=Label(
-                text=f"Skor akhir Anda: {self.current_score}",
-                font_size=sp(20),
-                color=(0, 0, 0, 1)
-            ),
-            size_hint=(0.8, 0.4)
+            title="Total Score",
+            content=layout,
+            size_hint=(0.8, 0.4),
+            auto_dismiss=False,
+            background="",
+            background_color=(1, 1, 1, 1),
+            title_color=(0, 0, 0, 1),
+            title_size=sp(24),
+            title_align="center",
         )
         popup.open()
-        self.manager.current = 'homepage'
+
+class ImageButton(ButtonBehavior, Image):
+    pass
 
 class MyApp(App):
     def build(self):
