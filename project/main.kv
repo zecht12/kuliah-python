@@ -1,147 +1,170 @@
 #:import dp kivy.metrics.dp
 #:import sp kivy.metrics.sp
+#:import Window kivy.core.window.Window
 
 <RegisterScreen>:
     name: "register"
-    BoxLayout:
-        orientation: "vertical"
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        size_hint: None, None
-        size: dp(300), dp(400)
-        padding: dp(20)
-        spacing: dp(10)
+    FloatLayout:
         canvas.before:
-            Color:
-                rgba: 1, 1, 1, 1
             Rectangle:
+                source: "assets/login.png"
                 pos: self.pos
                 size: self.size
 
         Label:
-            text: "Daftar Pengguna Baru"
-            font_size: sp(28)
+            text: "NAMA"
+            font_size: sp(14)
             bold: True
-            halign: "center"
-            valign: "middle"
-            color: 0, 0, 0, 1
-            size_hint_y: None
-            height: self.texture_size[1]
+            color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(100), dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.60}
 
         TextInput:
             id: username_input
             hint_text: "Masukkan nama pengguna"
-            font_size: sp(18)
+            font_size: sp(12)
+            hint_text_color: (1, 1, 1, 0.7)
             multiline: False
-            size_hint: 1, None
-            height: dp(50)
+            background_normal: "assets/input.png"
+            background_active: "assets/input.png"
+            foreground_color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.56}
+
+        Label:
+            text: "PASSWORD"
+            font_size: sp(14)
+            bold: True
+            color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(100), dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.52}
 
         TextInput:
             id: password_input
             hint_text: "Masukkan kata sandi"
-            font_size: sp(18)
+            font_size: sp(12)
+            hint_text_color: (1, 1, 1, 0.7)
             multiline: False
             password: True
-            size_hint: 1, None
-            height: dp(50)
-
-        Button:
-            text: "Daftar"
-            background_color: (0.09, 0.76, 0.57, 1)
-            font_size: sp(18)
-            size_hint: 1, None
-            height: dp(50)
-            on_release:
-                root.register()
+            background_normal: "assets/input.png"
+            background_active: "assets/input.png"
+            foreground_color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.48}
 
         BoxLayout:
             orientation: "horizontal"
-            size_hint_y: None
-            height: dp(40)
-
-            Label:
-                text: "Sudah punya akun?"
-                font_size: sp(16)
-                color: 0, 0, 0.7, 1
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.43}
 
             Button:
                 text: "Masuk"
-                font_size: sp(16)
-                color: 0, 0, 0.7, 1
+                font_size: sp(12)
+                bold: True
                 size_hint_x: None
                 width: dp(80)
-                background_color: (1, 1, 1, 0)
+                background_color: (0, 0, 0, 0)
+                color: (1, 1, 1, 1)
                 on_release: app.root.current = "login"
+
+        Button:
+            text: "Daftar"
+            font_size: sp(16)
+            bold: True
+            size_hint: None, None
+            size: dp(min(Window.width * 0.35, 140)), dp(60)
+            pos_hint: {"center_x": 0.5, "center_y": 0.36}
+            background_normal: "assets/BUTTON.png"
+            background_down: "assets/BUTTON.png"
+            on_release:
+                root.register()
 
 <LoginScreen>:
     name: "login"
-    BoxLayout:
-        orientation: "vertical"
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        size_hint: None, None
-        size: dp(300), dp(400)
-        padding: dp(20)
-        spacing: dp(10)
+    FloatLayout:
         canvas.before:
-            Color:
-                rgba: 1, 1, 1, 1
             Rectangle:
+                source: "assets/login.png"
                 pos: self.pos
                 size: self.size
 
         Label:
-            text: "Masuk"
-            font_size: sp(28)
+            text: "NAMA"
+            font_size: sp(14)
             bold: True
-            halign: "center"
-            valign: "middle"
-            color: 0, 0, 0, 1
-            size_hint_y: None
-            height: self.texture_size[1]
+            color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(100), dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.60}
 
         TextInput:
             id: username_input
             hint_text: "Masukkan nama pengguna"
-            font_size: sp(18)
+            font_size: sp(12)
+            hint_text_color: (1, 1, 1, 0.7)
             multiline: False
-            size_hint: 1, None
-            height: dp(50)
+            background_normal: "assets/input.png"
+            background_active: "assets/input.png"
+            foreground_color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.56}
+
+        Label:
+            text: "PASSWORD"
+            font_size: sp(14)
+            bold: True
+            color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(100), dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.52}
 
         TextInput:
             id: password_input
             hint_text: "Masukkan kata sandi"
-            font_size: sp(18)
+            font_size: sp(12)
+            hint_text_color: (1, 1, 1, 0.7)
             multiline: False
             password: True
-            size_hint: 1, None
-            height: dp(50)
-
-        Button:
-            text: "Masuk"
-            background_color: (0.09, 0.76, 0.57, 1)
-            font_size: sp(18)
-            size_hint: 1, None
-            height: dp(50)
-            on_release:
-                root.login()
+            background_normal: "assets/input.png"
+            background_active: "assets/input.png"
+            foreground_color: (1, 1, 1, 1)
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.48}
 
         BoxLayout:
             orientation: "horizontal"
-            size_hint_y: None
-            height: dp(40)
-
-            Label:
-                text: "Belum punya akun?"
-                font_size: sp(16)
-                color: 0, 0, 0.7, 1
+            size_hint: None, None
+            size: dp(min(Window.width * 0.45, 180)), dp(25)
+            pos_hint: {"center_x": 0.5, "center_y": 0.43}
 
             Button:
                 text: "Daftar"
-                font_size: sp(16)
-                color: 0, 0, 0.7, 1
+                font_size: sp(12)
+                bold: True
                 size_hint_x: None
                 width: dp(80)
-                background_color: (1, 1, 1, 0)
+                background_color: (0, 0, 0, 0)
+                color: (1, 1, 1, 1)
                 on_release: app.root.current = "register"
+
+        Button:
+            text: "Masuk"
+            font_size: sp(16)
+            bold: True
+            size_hint: None, None
+            size: dp(min(Window.width * 0.35, 140)), dp(60)
+            pos_hint: {"center_x": 0.5, "center_y": 0.36}
+            background_normal: "assets/BUTTON.png"
+            background_down: "assets/BUTTON.png"
+            on_release:
+                root.login()
 
 <HomePage>:
     name: "homepage"
@@ -255,7 +278,7 @@
                             radius: [dp(5)]
 
                     Label:
-                        text: "My Bestscore : 100"
+                        text: "My Bestscore : 0"
                         font_size: sp(14)
                         color: 0, 0, 0, 1
                         halign: "center"
@@ -309,7 +332,7 @@
                             radius: [dp(5)]
 
                     Label:
-                        text: "My Bestscore : 100"
+                        text: "My Bestscore : 0"
                         font_size: sp(14)
                         color: 0, 0, 0, 1
                         halign: "center"
@@ -363,7 +386,7 @@
                             radius: [dp(5)]
 
                     Label:
-                        text: "My Bestscore : 100"
+                        text: "My Bestscore : 0"
                         font_size: sp(14)
                         color: 0, 0, 0, 1
                         halign: "center"

@@ -14,8 +14,6 @@ from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 
-Window.clearcolor = (1, 1, 1, 1)
-
 store = JsonStore('user_data.json')
 
 class RegisterScreen(Screen):
@@ -63,7 +61,6 @@ class LoginScreen(Screen):
             print("No user registered. Please register first.")
 
 class HomePage(Screen):
-
     def on_touch_down(self, touch):
         target_box = self.ids.user_info_box
         level_1_box = self.ids.level_1_box
@@ -142,10 +139,22 @@ class HomePage(Screen):
         if store.exists('user'):
             user_data = store.get('user')
             username = user_data.get('name', 'User')
-            score = user_data.get('total_score', 0)
+            total_score = user_data.get('total_score', 0)
+            score_level1 = user_data.get('score_level1', 0)
+            score_level2 = user_data.get('score_level2', 0)
+            score_level3 = user_data.get('score_level3', 0)
 
             self.ids.name_label.text = f"{username}"
-            self.ids.score_label.text = f"{score}"
+            self.ids.score_label.text = f"{total_score}"
+
+            level_1_best_score_label = self.ids.level_1_box.children[0].children[0]
+            level_2_best_score_label = self.ids.level_2_box.children[0].children[0]
+            level_3_best_score_label = self.ids.level_3_box.children[0].children[0]
+
+            level_1_best_score_label.text = f"My Bestscore : {score_level1}"
+            level_2_best_score_label.text = f"My Bestscore : {score_level2}"
+            level_3_best_score_label.text = f"My Bestscore : {score_level3}"
+
 
     def show_quiz_pengurangan_popup(self):
         """Display popup for Level 2 Pengurangan."""
