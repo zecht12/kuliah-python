@@ -9,6 +9,7 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.metrics import dp, sp
 from kivy.core.window import Window
+from kivy.uix.widget import Widget
 import random
 from kivy.clock import Clock
 from kivy.uix.image import Image
@@ -76,59 +77,78 @@ class HomePage(Screen):
             self.toggle_logout()
         return super().on_touch_down(touch)
 
-    def show_level_popup(self):
-        """Display popup for Level 1 Penjumlahan."""
-        content = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Helper to create a styled popup."""
+        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
+
+        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
+        content.add_widget(title_label_spacer)
 
         label = Label(
-            text="Apakah Anda ingin memulai\nLevel 1 Penjumlahan?",
+            text=message,
             font_size=sp(18),
             halign="center",
             valign="middle",
             size_hint=(1, None),
-            height=dp(50),
-            color=(0, 0, 0, 1),
+            height=dp(100),
+            color=(1, 1, 1, 1)
         )
+        label.bind(size=label.setter('text_size'))
         content.add_widget(label)
 
-        button_layout = BoxLayout(orientation="horizontal", spacing=dp(10))
+        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
+        content.add_widget(label_button_spacer)
+
+        button_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(80),
+        )
 
         popup = Popup(
-            title="Memulai Quiz",
+            title=title,
             content=content,
-            size_hint=(0.8, 0.4),
+            size_hint=(0.8, 0.5),
             auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            separator_color=(0.9, 0.9, 0.9, 1),
-            title_color=(0, 0, 0, 1),
+            background="assets/Board_popup.png",
+            separator_color=(0, 0, 0, 0),
+            title_color=(1, 1, 1, 1),
             title_size=sp(24),
             title_align="center",
         )
 
-        mulai_button = Button(
-            text="MULAI",
+        confirm_button = Button(
+            text=confirm_text,
             size_hint=(1, None),
-            height=dp(50),
-            background_color=(0.09, 0.76, 0.57, 1),
+            height=dp(80),
+            background_normal="assets/BUTTON.png",
+            background_down="assets/BUTTON.png",
+            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.start_level_1(popup), popup.dismiss()),
+            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
 
-        batal_button = Button(
-            text="BATAL",
+        cancel_button = Button(
+            text=cancel_text,
             size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0.4, 0.4, 1),
+            height=dp(80),
+            background_normal="assets/BUTTON.png",
+            background_down="assets/BUTTON.png",
+            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
             on_release=popup.dismiss,
         )
 
-        button_layout.add_widget(mulai_button)
-        button_layout.add_widget(batal_button)
-
+        button_layout.add_widget(confirm_button)
+        button_layout.add_widget(cancel_button)
         content.add_widget(button_layout)
+
         popup.open()
+
+    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Wrapper for creating and showing a popup."""
+        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
 
     def start_level_1(self, popup):
         """Start Level 1 quiz."""
@@ -155,119 +175,10 @@ class HomePage(Screen):
             level_2_best_score_label.text = f"My Bestscore : {score_level2}"
             level_3_best_score_label.text = f"My Bestscore : {score_level3}"
 
-
-    def show_quiz_pengurangan_popup(self):
-        """Display popup for Level 2 Pengurangan."""
-        content = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-
-        label = Label(
-            text="Apakah Anda ingin memulai\nLevel 2 Pengurangan?",
-            font_size=sp(18),
-            halign="center",
-            valign="middle",
-            size_hint=(1, None),
-            height=dp(50),
-            color=(0, 0, 0, 1),
-        )
-        content.add_widget(label)
-
-        button_layout = BoxLayout(orientation="horizontal", spacing=dp(10))
-
-        popup = Popup(
-            title="Memulai Quiz",
-            content=content,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            separator_color=(0.9, 0.9, 0.9, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
-        )
-
-        mulai_button = Button(
-            text="MULAI",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(0.09, 0.76, 0.57, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.start_quiz_pengurangan(popup), popup.dismiss()),
-        )
-
-        batal_button = Button(
-            text="BATAL",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0.4, 0.4, 1),
-            color=(1, 1, 1, 1),
-            on_release=popup.dismiss,
-        )
-
-        button_layout.add_widget(mulai_button)
-        button_layout.add_widget(batal_button)
-
-        content.add_widget(button_layout)
-        popup.open()
-
     def start_quiz_pengurangan(self, popup):
         """Start Level 2 Pengurangan quiz."""
         popup.dismiss()
         self.manager.current = "quiz_pengurangan"
-
-    def show_quiz_perkalian_popup(self):
-        """Display popup for Quiz Perkalian."""
-        content = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-
-        label = Label(
-            text="Apakah Anda ingin memulai\nQuiz Perkalian?",
-            font_size=sp(18),
-            halign="center",
-            valign="middle",
-            size_hint=(1, None),
-            height=dp(50),
-            color=(0, 0, 0, 1),
-        )
-        content.add_widget(label)
-
-        button_layout = BoxLayout(orientation="horizontal", spacing=dp(10))
-
-        popup = Popup(
-            title="Memulai Quiz",
-            content=content,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            separator_color=(0.9, 0.9, 0.9, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
-        )
-
-        mulai_button = Button(
-            text="MULAI",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(0.09, 0.76, 0.57, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.start_quiz_perkalian(popup), popup.dismiss()),
-        )
-
-        batal_button = Button(
-            text="BATAL",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0.4, 0.4, 1),
-            color=(1, 1, 1, 1),
-            on_release=popup.dismiss,
-        )
-
-        button_layout.add_widget(mulai_button)
-        button_layout.add_widget(batal_button)
-
-        content.add_widget(button_layout)
-        popup.open()
 
     def start_quiz_perkalian(self, popup):
         """Start Quiz Perkalian."""
@@ -278,59 +189,39 @@ class HomePage(Screen):
         """Show logout popup."""
         self.show_logout_popup()
 
+    def show_level_popup(self):
+        """Display popup for Level 1 Penjumlahan."""
+        self.create_popup(
+            title="Memulai Quiz",
+            message="Apakah Anda ingin memulai\nLevel 1 Penjumlahan?",
+            on_confirm=lambda popup: self.start_level_1(popup),
+        )
+
+    def show_quiz_pengurangan_popup(self):
+        """Display popup for Level 2 Pengurangan."""
+        self.create_popup(
+            title="Memulai Quiz",
+            message="Apakah Anda ingin memulai\nLevel 2 Pengurangan?",
+            on_confirm=lambda popup: self.start_quiz_pengurangan(popup),
+        )
+
+    def show_quiz_perkalian_popup(self):
+        """Display popup for Quiz Perkalian."""
+        self.create_popup(
+            title="Memulai Quiz",
+            message="Apakah Anda ingin memulai\nQuiz Perkalian?",
+            on_confirm=lambda popup: self.start_quiz_perkalian(popup),
+        )
+
     def show_logout_popup(self):
         """Display a popup dialog for logging out."""
-        layout = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-        layout.canvas.before.clear()
-        label = Label(
-            text="Anda yakin ingin keluar?",
-            font_size=sp(18),
-            halign="center",
-            valign="middle",
-            size_hint=(1, None),
-            height=dp(50),
-            color=(0, 0, 0, 1)
-        )
-        layout.add_widget(label)
-
-        button_layout = BoxLayout(orientation="horizontal", spacing=dp(10))
-
-        popup = Popup(
+        self.create_popup(
             title="Keluar Dari Game",
-            content=layout,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            separator_color=(0.9, 0.9, 0.9, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
+            message="Anda yakin ingin keluar?",
+            on_confirm=lambda popup: self.logout(),
+            confirm_text="KELUAR",
+            cancel_text="LANJUTKAN",
         )
-
-        keluar_button = Button(
-            text="KELUAR",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0.4, 0.4, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.logout(), popup.dismiss()),
-        )
-
-        lanjutkan_button = Button(
-            text="LANJUTKAN",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(0.09, 0.76, 0.57, 1),
-            color=(1, 1, 1, 1),
-            on_release=popup.dismiss,
-        )
-
-        button_layout.add_widget(lanjutkan_button)
-        button_layout.add_widget(keluar_button)
-
-        layout.add_widget(button_layout)
-        popup.open()
 
     def logout(self, *args):
         """Handle user logout."""
@@ -440,46 +331,91 @@ class QuizPenjumlahanScreen(Screen):
         """Navigate to the homepage."""
         self.manager.current = 'homepage'
 
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Helper to create a styled popup."""
+        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
+
+        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
+        content.add_widget(title_label_spacer)
+
+        label = Label(
+            text=message,
+            font_size=sp(18),
+            halign="center",
+            valign="middle",
+            size_hint=(1, None),
+            height=dp(100),
+            color=(1, 1, 1, 1)
+        )
+        label.bind(size=label.setter('text_size'))
+        content.add_widget(label)
+
+        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
+        content.add_widget(label_button_spacer)
+
+        button_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(80),
+        )
+
+        popup = Popup(
+            title=title,
+            content=content,
+            size_hint=(0.8, 0.5),
+            auto_dismiss=False,
+            background="assets/Board_popup.png",
+            separator_color=(0, 0, 0, 0),
+            title_color=(1, 1, 1, 1),
+            title_size=sp(24),
+            title_align="center",
+        )
+
+        confirm_button = Button(
+            text=confirm_text,
+            size_hint=(1, None),
+            height=dp(80),
+            background_normal="assets/BUTTON.png",
+            background_down="assets/BUTTON.png",
+            background_color=(0.7, 0.7, 0.7, 1),
+            color=(1, 1, 1, 1),
+            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
+        )
+        button_layout.add_widget(confirm_button)
+
+        if cancel_text:
+            cancel_button = Button(
+                text=cancel_text,
+                size_hint=(1, None),
+                height=dp(80),
+                background_normal="assets/BUTTON.png",
+                background_down="assets/BUTTON.png",
+                background_color=(0.7, 0.7, 0.7, 1),
+                color=(1, 1, 1, 1),
+                on_release=popup.dismiss,
+            )
+            button_layout.add_widget(cancel_button)
+
+        content.add_widget(button_layout)
+        popup.open()
+
+    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Wrapper for creating and showing a popup."""
+        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
+
     def end_quiz(self):
         """Handle the end of the quiz."""
         Clock.unschedule(self.update_timer)
         self.update_score_in_store()
 
-        layout = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-
-        score_label = Label(
-            text=str(self.current_score),
-            font_size=sp(32),
-            color=(0, 0, 0, 1),
-            size_hint=(1, None),
-            height=dp(50),
-            halign="center",
-            valign="middle",
-        )
-        layout.add_widget(score_label)
-
-        exit_button = Button(
-            text="KELUAR",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0, 0, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.go_to_homepage(), popup.dismiss()),
-        )
-        layout.add_widget(exit_button)
-
-        popup = Popup(
+        self.show_popup(
             title="Total Score",
-            content=layout,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
+            message=f"Your score is: {self.current_score}",
+            on_confirm=lambda popup: self.go_to_homepage(),
+            confirm_text="KELUAR",
+            cancel_text="",
         )
-        popup.open()
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -582,46 +518,91 @@ class QuizPenguranganScreen(Screen):
         """Navigate to the homepage."""
         self.manager.current = 'homepage'
 
+    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Wrapper for creating and showing a popup."""
+        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
+
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Helper to create a styled popup."""
+        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
+
+        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
+        content.add_widget(title_label_spacer)
+
+        label = Label(
+            text=message,
+            font_size=sp(18),
+            halign="center",
+            valign="middle",
+            size_hint=(1, None),
+            height=dp(100),
+            color=(1, 1, 1, 1)
+        )
+        label.bind(size=label.setter('text_size'))
+        content.add_widget(label)
+
+        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
+        content.add_widget(label_button_spacer)
+
+        button_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(80),
+        )
+
+        popup = Popup(
+            title=title,
+            content=content,
+            size_hint=(0.8, 0.5),
+            auto_dismiss=False,
+            background="assets/Board_popup.png",
+            separator_color=(0, 0, 0, 0),
+            title_color=(1, 1, 1, 1),
+            title_size=sp(24),
+            title_align="center",
+        )
+
+        confirm_button = Button(
+            text=confirm_text,
+            size_hint=(1, None),
+            height=dp(80),
+            background_normal="assets/BUTTON.png",
+            background_down="assets/BUTTON.png",
+            background_color=(0.7, 0.7, 0.7, 1),
+            color=(1, 1, 1, 1),
+            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
+        )
+        button_layout.add_widget(confirm_button)
+
+        if cancel_text:
+            cancel_button = Button(
+                text=cancel_text,
+                size_hint=(1, None),
+                height=dp(80),
+                background_normal="assets/BUTTON.png",
+                background_down="assets/BUTTON.png",
+                background_color=(0.7, 0.7, 0.7, 1),
+                color=(1, 1, 1, 1),
+                on_release=popup.dismiss,
+            )
+            button_layout.add_widget(cancel_button)
+
+        content.add_widget(button_layout)
+        popup.open()
+
     def end_quiz(self):
         """Handle the end of the quiz."""
         Clock.unschedule(self.update_timer)
         self.update_score_in_store()
 
-        layout = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-
-        score_label = Label(
-            text=str(self.current_score),
-            font_size=sp(32),
-            color=(0, 0, 0, 1),
-            size_hint=(1, None),
-            height=dp(50),
-            halign="center",
-            valign="middle",
-        )
-        layout.add_widget(score_label)
-
-        exit_button = Button(
-            text="KELUAR",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0, 0, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.go_to_homepage(), popup.dismiss()),
-        )
-        layout.add_widget(exit_button)
-
-        popup = Popup(
+        self.show_popup(
             title="Total Score",
-            content=layout,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
+            message=f"Your score is: {self.current_score}",
+            on_confirm=lambda popup: self.go_to_homepage(),
+            confirm_text="KELUAR",
+            cancel_text=None,
         )
-        popup.open()
 
 class QuizPerkalianScreen(Screen):
     current_score = 0
@@ -721,46 +702,91 @@ class QuizPerkalianScreen(Screen):
         """Navigate to the homepage."""
         self.manager.current = 'homepage'
 
+    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Wrapper for creating and showing a popup."""
+        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
+
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Helper to create a styled popup."""
+        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
+
+        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
+        content.add_widget(title_label_spacer)
+
+        label = Label(
+            text=message,
+            font_size=sp(18),
+            halign="center",
+            valign="middle",
+            size_hint=(1, None),
+            height=dp(100),
+            color=(1, 1, 1, 1)
+        )
+        label.bind(size=label.setter('text_size'))
+        content.add_widget(label)
+
+        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
+        content.add_widget(label_button_spacer)
+
+        button_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(80),
+        )
+
+        popup = Popup(
+            title=title,
+            content=content,
+            size_hint=(0.8, 0.5),
+            auto_dismiss=False,
+            background="assets/Board_popup.png",
+            separator_color=(0, 0, 0, 0),
+            title_color=(1, 1, 1, 1),
+            title_size=sp(24),
+            title_align="center",
+        )
+
+        confirm_button = Button(
+            text=confirm_text,
+            size_hint=(1, None),
+            height=dp(80),
+            background_normal="assets/BUTTON.png",
+            background_down="assets/BUTTON.png",
+            background_color=(0.7, 0.7, 0.7, 1),
+            color=(1, 1, 1, 1),
+            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
+        )
+        button_layout.add_widget(confirm_button)
+
+        if cancel_text:
+            cancel_button = Button(
+                text=cancel_text,
+                size_hint=(1, None),
+                height=dp(80),
+                background_normal="assets/BUTTON.png",
+                background_down="assets/BUTTON.png",
+                background_color=(0.7, 0.7, 0.7, 1),
+                color=(1, 1, 1, 1),
+                on_release=popup.dismiss,
+            )
+            button_layout.add_widget(cancel_button)
+
+        content.add_widget(button_layout)
+        popup.open()
+
     def end_quiz(self):
         """Handle the end of the quiz."""
         Clock.unschedule(self.update_timer)
         self.update_score_in_store()
 
-        layout = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(20))
-
-        score_label = Label(
-            text=str(self.current_score),
-            font_size=sp(32),
-            color=(0, 0, 0, 1),
-            size_hint=(1, None),
-            height=dp(50),
-            halign="center",
-            valign="middle",
-        )
-        layout.add_widget(score_label)
-
-        exit_button = Button(
-            text="KELUAR",
-            size_hint=(1, None),
-            height=dp(50),
-            background_color=(1, 0, 0, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (self.go_to_homepage(), popup.dismiss()),
-        )
-        layout.add_widget(exit_button)
-
-        popup = Popup(
+        self.show_popup(
             title="Total Score",
-            content=layout,
-            size_hint=(0.8, 0.4),
-            auto_dismiss=False,
-            background="",
-            background_color=(1, 1, 1, 1),
-            title_color=(0, 0, 0, 1),
-            title_size=sp(24),
-            title_align="center",
+            message=f"Your score is: {self.current_score}",
+            on_confirm=lambda popup: self.go_to_homepage(),
+            confirm_text="KELUAR",
+            cancel_text=None,
         )
-        popup.open()
 
 class MyApp(App):
     def build(self):
