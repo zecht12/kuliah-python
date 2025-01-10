@@ -433,14 +433,20 @@
                     size_hint: None, None
                     size: dp(30), dp(30)
 
-                Label:
-                    id: timer_label
-                    text: "0:10"
-                    font_size: sp(20)
-                    halign: "left"
-                    valign: "middle"
-                    color: (0, 0, 0, 1)
-                    text_size: self.size
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: dp(100), dp(50)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.2}
+
+                    Label:
+                        id: timer_label
+                        text: "0:10"
+                        font_size: sp(20)
+                        halign: "left"
+                        valign: "middle"
+                        color: (0.431, 0.184, 0.11, 1)
+                        text_size: self.size
 
             BoxLayout:
                 orientation: "horizontal"
@@ -467,7 +473,7 @@
                     size: self.texture_size
                     valign: "middle"
                     halign: "left"
-                    color: (0, 0, 0, 1)
+                    color: (0.431, 0.184, 0.11, 1)
 
         ProgressBar:
             id: progress_bar
@@ -482,7 +488,7 @@
             font_size: sp(28)
             halign: "center"
             valign: "middle"
-            color: (0, 0, 0, 1)
+            color: (0.431, 0.184, 0.11, 1)
             text_size: self.size
 
         GridLayout:
@@ -495,32 +501,32 @@
                 id: option_1
                 text: "56"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_2
                 text: "49"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_3
                 text: "28"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_4
                 text: "36"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
 <QuizPenguranganScreen>:
@@ -557,14 +563,20 @@
                     size_hint: None, None
                     size: dp(30), dp(30)
 
-                Label:
-                    id: timer_label
-                    text: "0:10"
-                    font_size: sp(20)
-                    halign: "left"
-                    valign: "middle"
-                    color: (0, 0, 0, 1)
-                    text_size: self.size
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: dp(100), dp(50)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.2}
+
+                    Label:
+                        id: timer_label
+                        text: "0:10"
+                        font_size: sp(20)
+                        halign: "left"
+                        valign: "middle"
+                        color: (0.431, 0.184, 0.11, 1)
+                        text_size: self.size
 
             BoxLayout:
                 orientation: "horizontal"
@@ -591,7 +603,7 @@
                     size: self.texture_size
                     valign: "middle"
                     halign: "left"
-                    color: (0, 0, 0, 1)
+                    color: (0.431, 0.184, 0.11, 1)
 
         ProgressBar:
             id: progress_bar
@@ -606,7 +618,7 @@
             font_size: sp(28)
             halign: "center"
             valign: "middle"
-            color: (0, 0, 0, 1)
+            color: (0.431, 0.184, 0.11, 1)
             text_size: self.size
 
         GridLayout:
@@ -619,32 +631,32 @@
                 id: option_1
                 text: "7"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_2
                 text: "5"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_3
                 text: "6"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_4
                 text: "8"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
 <QuizPerkalianScreen>:
@@ -681,14 +693,20 @@
                     size_hint: None, None
                     size: dp(30), dp(30)
 
-                Label:
-                    id: timer_label
-                    text: "0:10"
-                    font_size: sp(20)
-                    halign: "left"
-                    valign: "middle"
-                    color: (0, 0, 0, 1)
-                    text_size: self.size
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: dp(100), dp(50)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.2}
+
+                    Label:
+                        id: timer_label
+                        text: "0:10"
+                        font_size: sp(20)
+                        halign: "left"
+                        valign: "middle"
+                        color: (0.431, 0.184, 0.11, 1)
+                        text_size: self.size
 
             BoxLayout:
                 orientation: "horizontal"
@@ -730,7 +748,7 @@
             font_size: sp(28)
             halign: "center"
             valign: "middle"
-            color: (0, 0, 0, 1)
+            color: (0.431, 0.184, 0.11, 1)
             text_size: self.size
 
         GridLayout:
@@ -743,30 +761,30 @@
                 id: option_1
                 text: "12"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_2
                 text: "9"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_3
                 text: "10"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
 
             Button:
                 id: option_4
                 text: "11"
                 font_size: sp(24)
-                background_normal: ""
-                background_color: (0, 0.8, 0.6, 1)
+                background_normal: "assets/Board_Answer.png"
+                background_down: "assets/Board_Answer.png"
                 on_release: root.check_answer(self.text)
