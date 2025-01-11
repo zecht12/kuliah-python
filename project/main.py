@@ -160,20 +160,10 @@ class HomePage(Screen):
             user_data = store.get('user')
             username = user_data.get('name', 'User')
             total_score = user_data.get('total_score', 0)
-            score_level1 = user_data.get('score_level1', 0)
-            score_level2 = user_data.get('score_level2', 0)
-            score_level3 = user_data.get('score_level3', 0)
 
             self.ids.name_label.text = f"{username}"
             self.ids.score_label.text = f"{total_score}"
 
-            level_1_best_score_label = self.ids.level_1_box.children[0].children[0]
-            level_2_best_score_label = self.ids.level_2_box.children[0].children[0]
-            level_3_best_score_label = self.ids.level_3_box.children[0].children[0]
-
-            level_1_best_score_label.text = f"My Bestscore : {score_level1}"
-            level_2_best_score_label.text = f"My Bestscore : {score_level2}"
-            level_3_best_score_label.text = f"My Bestscore : {score_level3}"
 
     def start_quiz_pengurangan(self, popup):
         """Start Level 2 Pengurangan quiz."""

@@ -173,9 +173,8 @@
         padding: dp(20)
         spacing: dp(10)
         canvas.before:
-            Color:
-                rgba: 0.87, 0.87, 0.87, 1
             Rectangle:
+                source: "assets/homepage.png"
                 pos: self.pos
                 size: self.size
 
@@ -184,31 +183,30 @@
             orientation: "horizontal"
             size_hint_y: None
             height: dp(80)
-            spacing: dp(10)
-            padding: [dp(10), dp(10)]
+            spacing: dp(2)
+            padding: [dp(30), dp(20)]
             canvas.before:
-                Color:
-                    rgba: 0.09, 0.76, 0.57, 1
                 Rectangle:
+                    source: "assets/nama.png"
                     pos: self.pos
                     size: self.size
 
             Label:
                 id: name_label
-                text: "NAMA ANAK"
-                font_size: sp(24)
+                text: "NAMA"
+                font_size: sp(18)
                 color: 1, 1, 1, 1
                 bold: True
-                size_hint_x: 0.8
+                size_hint_x: 0.5
                 valign: "middle"
                 halign: "left"
                 text_size: self.size
 
             BoxLayout:
                 orientation: "horizontal"
-                spacing: dp(5)
-                size_hint_x: 0.2
+                size_hint_x: 0.1
                 pos_hint: {"center_y": 0.5}
+                spacing: dp(1)
 
                 Image:
                     source: "assets/crown_icons.png"
@@ -218,7 +216,7 @@
 
                 Label:
                     id: score_label
-                    text: "0"
+                    text: "200"
                     font_size: sp(18)
                     color: 1, 1, 1, 1
                     valign: "middle"
@@ -239,53 +237,30 @@
                 size_hint: None, None
                 size: dp(160), dp(200)
                 canvas.before:
-                    Color:
-                        rgba: 0, 0.8, 0.6, 1
-                    RoundedRectangle:
+                    Rectangle:
+                        source: "assets/Board_level.png"
                         pos: self.pos
                         size: self.size
-                        radius: [dp(10)]
 
                 BoxLayout:
-                    padding: dp(10)
+                    orientation: "vertical"
+                    spacing: dp(5)
                     size_hint: None, None
-                    size: dp(120), dp(120)
-                    pos_hint: {"center_x": 0.5}
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size: dp(70), dp(140)
 
                     Image:
                         source: "assets/level-1.png"
                         size_hint: None, None
-                        size: dp(100), dp(100)
-                        pos_hint: {"center_x": 0.5}
-
-                Label:
-                    text: "Level 1 Penjumlahan"
-                    font_size: sp(16)
-                    color: 1, 1, 1, 1
-                    halign: "center"
-
-                BoxLayout:
-                    padding: [dp(10), dp(5)]
-                    size_hint: 1, None
-                    height: self.minimum_height
-                    pos_hint: {"center_x": 0.5}
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [dp(5)]
+                        size: dp(60), dp(60)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     Label:
-                        text: "My Bestscore : 0"
-                        font_size: sp(14)
-                        color: 0, 0, 0, 1
+                        text: "Level 1\nPenjumlahan"
+                        font_size: sp(16)
+                        color: 1, 1, 1, 1
                         halign: "center"
                         valign: "middle"
-                        size_hint: None, None
-                        size: self.texture_size
-                        text_size: None, None
 
             BoxLayout:
                 id: level_2_box
@@ -293,53 +268,30 @@
                 size_hint: None, None
                 size: dp(160), dp(200)
                 canvas.before:
-                    Color:
-                        rgba: 0, 0.8, 0.6, 1
-                    RoundedRectangle:
+                    Rectangle:
+                        source: "assets/Board_level.png"
                         pos: self.pos
                         size: self.size
-                        radius: [dp(10)]
 
                 BoxLayout:
-                    padding: dp(10)
+                    orientation: "vertical"
+                    spacing: dp(5)
                     size_hint: None, None
-                    size: dp(120), dp(120)
-                    pos_hint: {"center_x": 0.5}
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size: dp(70), dp(140)
 
                     Image:
                         source: "assets/level-2.png"
                         size_hint: None, None
-                        size: dp(100), dp(100)
-                        pos_hint: {"center_x": 0.5}
-
-                Label:
-                    text: "Level 2 Pengurangan"
-                    font_size: sp(16)
-                    color: 1, 1, 1, 1
-                    halign: "center"
-
-                BoxLayout:
-                    padding: [dp(10), dp(5)]
-                    size_hint: 1, None
-                    height: self.minimum_height
-                    pos_hint: {"center_x": 0.5}
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [dp(5)]
+                        size: dp(60), dp(60)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     Label:
-                        text: "My Bestscore : 0"
-                        font_size: sp(14)
-                        color: 0, 0, 0, 1
+                        text: "Level 2\nPengurangan"
+                        font_size: sp(16)
+                        color: 1, 1, 1, 1
                         halign: "center"
                         valign: "middle"
-                        size_hint: None, None
-                        size: self.texture_size
-                        text_size: None, None
 
             BoxLayout:
                 id: level_3_box
@@ -347,53 +299,29 @@
                 size_hint: None, None
                 size: dp(160), dp(200)
                 canvas.before:
-                    Color:
-                        rgba: 0, 0.8, 0.6, 1
-                    RoundedRectangle:
+                    Rectangle:
+                        source: "assets/Board_level.png"
                         pos: self.pos
                         size: self.size
-                        radius: [dp(10)]
 
                 BoxLayout:
-                    padding: dp(10)
+                    orientation: "vertical"
                     size_hint: None, None
-                    size: dp(120), dp(120)
-                    pos_hint: {"center_x": 0.5}
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size: dp(70), dp(140)
 
                     Image:
                         source: "assets/level-3.png"
                         size_hint: None, None
-                        size: dp(100), dp(100)
-                        pos_hint: {"center_x": 0.5}
-
-                Label:
-                    text: "Level 3 Perkalian"
-                    font_size: sp(16)
-                    color: 1, 1, 1, 1
-                    halign: "center"
-
-                BoxLayout:
-                    padding: [dp(10), dp(5)]
-                    size_hint: 1, None
-                    height: self.minimum_height
-                    pos_hint: {"center_x": 0.5}
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [dp(5)]
+                        size: dp(60), dp(60)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                     Label:
-                        text: "My Bestscore : 0"
-                        font_size: sp(14)
-                        color: 0, 0, 0, 1
+                        text: "Level 3\nPerkalian"
+                        font_size: sp(16)
+                        color: 1, 1, 1, 1
                         halign: "center"
                         valign: "middle"
-                        size_hint: None, None
-                        size: self.texture_size
-                        text_size: None, None
 
 <ImageButton>:
     allow_stretch: True
