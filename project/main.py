@@ -8,14 +8,20 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.metrics import dp, sp
-from kivy.core.window import Window
 from kivy.uix.widget import Widget
 import random
 from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.core.audio import SoundLoader
 
 store = JsonStore('user_data.json')
+
+def play_sound(sound_path):
+    """Play a sound from the given path."""
+    sound = SoundLoader.load(sound_path)
+    if sound:
+        sound.play()
 
 class RegisterScreen(Screen):
     def register(self):
@@ -37,6 +43,7 @@ class RegisterScreen(Screen):
                         status_level3="Belum Diselesaikan", 
                         logged_in=True)
             print("Registration successful!")
+            play_sound("assets/musik/masuk.mp3")
             self.manager.current = 'homepage'
         else:
             print("Username and password cannot be empty.")
@@ -55,6 +62,7 @@ class LoginScreen(Screen):
                 user_data['logged_in'] = True
                 store.put('user', **user_data)
                 print("Login successful!")
+                play_sound("assets/musik/masuk.mp3")
                 self.manager.current = 'homepage'
             else:
                 print("Login failed: Invalid username or password.")
@@ -62,11 +70,14 @@ class LoginScreen(Screen):
             print("No user registered. Please register first.")
 
 class HomePage(Screen):
+    background_music = None
+
     def on_touch_down(self, touch):
         target_box = self.ids.user_info_box
         level_1_box = self.ids.level_1_box
         level_2_box = self.ids.level_2_box
         level_3_box = self.ids.level_3_box
+
         if level_1_box.collide_point(*touch.pos):
             self.show_level_popup()
         elif level_2_box.collide_point(*touch.pos):
@@ -118,6 +129,12 @@ class HomePage(Screen):
             title_align="center",
         )
 
+        confirm_sound_file = "assets/musik/keluar.mp3" if confirm_text == "KELUAR" else "assets/musik/entry.mp3"
+        cancel_sound_file = "assets/musik/keluar.mp3" if cancel_text == "LANJUTKAN" else "assets/musik/batal.mp3"
+
+        confirm_sound = SoundLoader.load(confirm_sound_file)
+        cancel_sound = SoundLoader.load(cancel_sound_file)
+
         confirm_button = Button(
             text=confirm_text,
             size_hint=(1, None),
@@ -126,7 +143,11 @@ class HomePage(Screen):
             background_down="assets/BUTTON.png",
             background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
-            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
+            on_release=lambda *args: (
+                confirm_sound.play() if confirm_sound else None,
+                on_confirm(popup),
+                popup.dismiss()
+            ),
         )
 
         cancel_button = Button(
@@ -137,7 +158,10 @@ class HomePage(Screen):
             background_down="assets/BUTTON.png",
             background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
-            on_release=popup.dismiss,
+            on_release=lambda *args: (
+                cancel_sound.play() if cancel_sound else None,
+                popup.dismiss()
+            ),
         )
 
         button_layout.add_widget(confirm_button)
@@ -156,14 +180,19 @@ class HomePage(Screen):
         self.manager.current = "quiz_penjumlahan"
 
     def on_pre_enter(self):
+        if not self.background_music:
+            self.background_music = SoundLoader.load("assets/musik/background.mp3")
+            if self.background_music:
+                self.background_music.loop = True
+                self.background_music.volume = 0.5
+                self.background_music.play()
+
         if store.exists('user'):
             user_data = store.get('user')
             username = user_data.get('name', 'User')
             total_score = user_data.get('total_score', 0)
-
             self.ids.name_label.text = f"{username}"
             self.ids.score_label.text = f"{total_score}"
-
 
     def start_quiz_pengurangan(self, popup):
         """Start Level 2 Pengurangan quiz."""
@@ -221,23 +250,87 @@ class HomePage(Screen):
             store.put('user', **user_data)
             self.manager.current = 'login'
 
+    def on_leave(self):
+        if self.background_music:
+            self.background_music.stop()
+            self.background_music.unload()
+            self.background_music = None
+
 class QuizPenjumlahanScreen(Screen):
     current_score = 0
     current_question = 0
     total_questions = 20
+    timer_sound = None
+    win_sound = None
+    lose_sound = None
+    keluar_sound = None
 
     def on_pre_enter(self):
-        """Reset state and start the timer."""
+        """Inisialisasi sebelum masuk ke layar."""
         self.time_left = 10
         self.current_score = 0
         self.current_question = 0
         self.ids.progress_bar.value = 0
         self.update_timer_label()
-        Clock.schedule_interval(self.update_timer, 1)
         self.generate_question()
+        self.load_sounds()
+        Clock.schedule_interval(self.update_timer, 1)
+
+    def on_leave(self):
+        """Membersihkan sumber daya saat meninggalkan layar."""
+        Clock.unschedule(self.update_timer)
+        self.stop_and_unload_sounds()
+
+    def load_sounds(self):
+        """Memuat file suara yang digunakan."""
+        if not self.timer_sound:
+            self.timer_sound = SoundLoader.load("assets/musik/waktu.mp3")
+            if self.timer_sound:
+                self.timer_sound.loop = True
+                self.timer_sound.volume = 0.5
+                self.timer_sound.play()
+
+        if not self.win_sound:
+            self.win_sound = SoundLoader.load("assets/musik/menang.mp3")
+
+        if not self.lose_sound:
+            self.lose_sound = SoundLoader.load("assets/musik/kalah.mp3")
+
+        if not self.keluar_sound:
+            self.keluar_sound = SoundLoader.load("assets/musik/keluar.mp3")
+
+    def stop_and_unload_sounds(self):
+        """Menghentikan dan membuang suara yang dimuat."""
+        if self.timer_sound:
+            self.timer_sound.stop()
+            self.timer_sound.unload()
+            self.timer_sound = None
+        if self.win_sound:
+            self.win_sound.unload()
+            self.win_sound = None
+        if self.lose_sound:
+            self.lose_sound.unload()
+            self.lose_sound = None
+        if self.keluar_sound:
+            self.keluar_sound.unload()
+            self.keluar_sound = None
+
+    def play_keluar_sound(self):
+        """Memainkan suara 'keluar'."""
+        if self.keluar_sound:
+            self.keluar_sound.play()
+
+    def play_lose_sound(self):
+        """Memainkan suara 'kalah'."""
+        if self.lose_sound:
+            self.lose_sound.play()
+
+    def back_button_pressed(self):
+        self.play_lose_sound()
+        Clock.schedule_once(lambda dt: self.go_to_homepage(), 0.5)
 
     def update_timer(self, dt):
-        """Update the timer and progress bar."""
+        """Memperbarui timer dan progress bar."""
         if self.time_left > 0:
             self.time_left -= 1
             self.update_timer_label()
@@ -247,24 +340,25 @@ class QuizPenjumlahanScreen(Screen):
             self.generate_question()
 
     def update_timer_label(self):
-        """Update the timer label."""
+        """Memperbarui label timer di UI."""
         self.ids.timer_label.text = f"0:{self.time_left:02d}"
 
     def generate_question(self):
-        """Generate a new math question."""
+        """Menghasilkan pertanyaan matematika baru."""
         import random
 
         if self.current_question < self.total_questions:
             self.time_left = 10
             self.update_timer_label()
             self.ids.progress_bar.value = 0
-            number1 = random.randint(1, 10)
-            number2 = random.randint(1, 10)
+
+            number1 = random.randint(1, 20)
+            number2 = random.randint(1, 20)
             correct_answer = number1 + number2
 
             wrong_answers = set()
             while len(wrong_answers) < 3:
-                wrong_answer = random.randint(1, 20)
+                wrong_answer = random.randint(1, 40)
                 if wrong_answer != correct_answer:
                     wrong_answers.add(wrong_answer)
 
@@ -284,12 +378,8 @@ class QuizPenjumlahanScreen(Screen):
         else:
             self.end_quiz()
 
-    def update_score_label(self):
-        """Update the score label in the UI."""
-        self.ids.score_label.text = str(self.current_score)
-
     def check_answer(self, selected_answer):
-        """Check if the selected answer is correct."""
+        """Memeriksa jawaban yang dipilih oleh pengguna."""
         question_text = self.ids.question_label.text
         clean_question = question_text.replace('[b]', '').replace('[/b]', '').replace('[color=#FF0000]', '').replace('[/color]', '').strip()
         math_expression = clean_question.split('=')[0].strip()
@@ -303,8 +393,12 @@ class QuizPenjumlahanScreen(Screen):
         except Exception as e:
             print(f"Error while evaluating the answer: {e}")
 
+    def update_score_label(self):
+        """Memperbarui skor di UI."""
+        self.ids.score_label.text = str(self.current_score)
+
     def update_score_in_store(self):
-        """Update the score in the JSON store for Level 1."""
+        """Memperbarui skor ke JSON store."""
         if store.exists('user'):
             user_data = store.get('user')
             user_data['score_level1'] = max(
@@ -317,16 +411,48 @@ class QuizPenjumlahanScreen(Screen):
             )
             store.put('user', **user_data)
 
+    def update_status_level1(self):
+        """Mengupdate status_level1 menjadi 'Sudah selesai' di JSON store."""
+        if store.exists('user'):
+            user_data = store.get('user')
+            user_data['status_level1'] = "Sudah selesai"
+            store.put('user', **user_data)
+
+    def end_quiz(self):
+        """Mengakhiri permainan."""
+        Clock.unschedule(self.update_timer)
+        if self.timer_sound:
+            self.timer_sound.stop()
+
+        if self.win_sound:
+            self.win_sound.play()
+        self.update_score_in_store()
+        self.update_status_level1()
+
+        self.show_popup(
+            title="Total Score",
+            message=f"Your score is: {self.current_score}",
+            on_confirm=lambda popup: self.handle_keluar(popup),
+            confirm_text="KELUAR",
+            cancel_text=None,
+        )
+
+    def handle_keluar(self, popup):
+        """Memainkan suara 'keluar' dan kembali ke homepage."""
+        self.play_keluar_sound()
+        Clock.schedule_once(lambda dt: self.go_to_homepage(), 0.5)
+
     def go_to_homepage(self):
-        """Navigate to the homepage."""
+        """Navigasi ke homepage."""
         self.manager.current = 'homepage'
 
-    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
-        """Helper to create a styled popup."""
-        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
+    def show_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
+        """Membuat dan menampilkan popup."""
+        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
 
-        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
-        content.add_widget(title_label_spacer)
+    def create_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
+        """Helper untuk membuat popup dengan gaya tertentu."""
+        content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
 
         label = Label(
             text=message,
@@ -339,9 +465,6 @@ class QuizPenjumlahanScreen(Screen):
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
-
-        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
-        content.add_widget(label_button_spacer)
 
         button_layout = BoxLayout(
             orientation="horizontal",
@@ -368,7 +491,6 @@ class QuizPenjumlahanScreen(Screen):
             height=dp(80),
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
-            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
             on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
@@ -381,7 +503,6 @@ class QuizPenjumlahanScreen(Screen):
                 height=dp(80),
                 background_normal="assets/BUTTON.png",
                 background_down="assets/BUTTON.png",
-                background_color=(0.7, 0.7, 0.7, 1),
                 color=(1, 1, 1, 1),
                 on_release=popup.dismiss,
             )
@@ -390,23 +511,6 @@ class QuizPenjumlahanScreen(Screen):
         content.add_widget(button_layout)
         popup.open()
 
-    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
-        """Wrapper for creating and showing a popup."""
-        self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
-
-    def end_quiz(self):
-        """Handle the end of the quiz."""
-        Clock.unschedule(self.update_timer)
-        self.update_score_in_store()
-
-        self.show_popup(
-            title="Total Score",
-            message=f"Your score is: {self.current_score}",
-            on_confirm=lambda popup: self.go_to_homepage(),
-            confirm_text="KELUAR",
-            cancel_text="",
-        )
-
 class ImageButton(ButtonBehavior, Image):
     pass
 
@@ -414,6 +518,10 @@ class QuizPenguranganScreen(Screen):
     current_score = 0
     current_question = 0
     total_questions = 20
+    timer_sound = None
+    win_sound = None
+    lose_sound = None
+    keluar_sound = None
 
     def on_pre_enter(self):
         """Reset state and start the timer."""
@@ -422,8 +530,43 @@ class QuizPenguranganScreen(Screen):
         self.current_question = 0
         self.ids.progress_bar.value = 0
         self.update_timer_label()
-        Clock.schedule_interval(self.update_timer, 1)
         self.generate_question()
+
+        if not self.timer_sound:
+            self.timer_sound = SoundLoader.load("assets/musik/waktu.mp3")
+            if self.timer_sound:
+                self.timer_sound.loop = True
+                self.timer_sound.volume = 0.5
+                self.timer_sound.play()
+
+        if not self.win_sound:
+            self.win_sound = SoundLoader.load("assets/musik/menang.mp3")
+        if not self.lose_sound:
+            self.lose_sound = SoundLoader.load("assets/musik/kalah.mp3")
+        if not self.keluar_sound:
+            self.keluar_sound = SoundLoader.load("assets/musik/keluar.mp3")
+            if not self.keluar_sound:
+                print("Failed to load keluar sound!")
+
+        Clock.schedule_interval(self.update_timer, 1)
+
+    def play_keluar_sound(self):
+        """Play the 'keluar' sound."""
+        if self.keluar_sound:
+            self.keluar_sound.play()
+        else:
+            print("Keluar sound not loaded!")
+
+    def back_button_pressed(self):
+        self.play_lose_sound()
+        Clock.schedule_once(lambda dt: self.go_to_homepage(), 0.5)
+
+    def play_lose_sound(self):
+        """Play the 'lose' sound."""
+        if self.lose_sound:
+            self.lose_sound.play()
+        else:
+            print("Lose sound not loaded!")
 
     def update_timer(self, dt):
         """Update the timer and progress bar."""
@@ -441,6 +584,8 @@ class QuizPenguranganScreen(Screen):
 
     def generate_question(self):
         """Generate a new math question."""
+        import random
+
         if self.current_question < self.total_questions:
             self.time_left = 10
             self.update_timer_label()
@@ -508,11 +653,11 @@ class QuizPenguranganScreen(Screen):
         """Navigate to the homepage."""
         self.manager.current = 'homepage'
 
-    def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+    def show_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
         """Wrapper for creating and showing a popup."""
         self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
 
-    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+    def create_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
         """Helper to create a styled popup."""
         content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
 
@@ -581,23 +726,54 @@ class QuizPenguranganScreen(Screen):
         content.add_widget(button_layout)
         popup.open()
 
+    def update_status_level2(self):
+        """Update status_level2 to 'Sudah selesai' in JSON store."""
+        if store.exists('user'):
+            user_data = store.get('user')
+            user_data['status_level2'] = "Sudah selesai"
+            store.put('user', **user_data)
+
     def end_quiz(self):
         """Handle the end of the quiz."""
         Clock.unschedule(self.update_timer)
+        if self.timer_sound:
+            self.timer_sound.stop()
+
+        if self.win_sound:
+            self.win_sound.play()
+
         self.update_score_in_store()
+        self.update_status_level2()
 
         self.show_popup(
             title="Total Score",
             message=f"Your score is: {self.current_score}",
-            on_confirm=lambda popup: self.go_to_homepage(),
+            on_confirm=lambda popup: self.handle_keluar(popup),
             confirm_text="KELUAR",
             cancel_text=None,
         )
+
+    def handle_keluar(self, popup):
+        """Play 'keluar' sound and navigate to the homepage."""
+        self.play_keluar_sound()
+        Clock.schedule_once(lambda dt: self.go_to_homepage(), 0.5)
+
+    def on_leave(self):
+        """Clean up when leaving the screen."""
+        Clock.unschedule(self.update_timer)
+        if self.timer_sound:
+            self.timer_sound.stop()
+            self.timer_sound.unload()
+            self.timer_sound = None
 
 class QuizPerkalianScreen(Screen):
     current_score = 0
     current_question = 0
     total_questions = 20
+    timer_sound = None
+    win_sound = None
+    lose_sound = None
+    keluar_sound = None
 
     def on_pre_enter(self):
         """Reset state and start the timer."""
@@ -606,8 +782,62 @@ class QuizPerkalianScreen(Screen):
         self.current_question = 0
         self.ids.progress_bar.value = 0
         self.update_timer_label()
-        Clock.schedule_interval(self.update_timer, 1)
         self.generate_question()
+        self.load_sounds()
+        Clock.schedule_interval(self.update_timer, 1)
+
+    def on_leave(self):
+        """Clean up resources when leaving the screen."""
+        Clock.unschedule(self.update_timer)
+        self.stop_and_unload_sounds()
+
+    def load_sounds(self):
+        """Load sound files."""
+        if not self.timer_sound:
+            self.timer_sound = SoundLoader.load("assets/musik/waktu.mp3")
+            if self.timer_sound:
+                self.timer_sound.loop = True
+                self.timer_sound.volume = 0.5
+                self.timer_sound.play()
+
+        if not self.win_sound:
+            self.win_sound = SoundLoader.load("assets/musik/menang.mp3")
+
+        if not self.lose_sound:
+            self.lose_sound = SoundLoader.load("assets/musik/kalah.mp3")
+
+        if not self.keluar_sound:
+            self.keluar_sound = SoundLoader.load("assets/musik/keluar.mp3")
+
+    def stop_and_unload_sounds(self):
+        """Stop and unload sound resources."""
+        if self.timer_sound:
+            self.timer_sound.stop()
+            self.timer_sound.unload()
+            self.timer_sound = None
+        if self.win_sound:
+            self.win_sound.unload()
+            self.win_sound = None
+        if self.lose_sound:
+            self.lose_sound.unload()
+            self.lose_sound = None
+        if self.keluar_sound:
+            self.keluar_sound.unload()
+            self.keluar_sound = None
+
+    def play_keluar_sound(self):
+        """Play the 'keluar' sound."""
+        if self.keluar_sound:
+            self.keluar_sound.play()
+
+    def back_button_pressed(self):
+        self.play_lose_sound()
+        Clock.schedule_once(lambda dt: self.go_to_homepage(), 0.5)
+
+    def play_lose_sound(self):
+        """Play the 'lose' sound."""
+        if self.lose_sound:
+            self.lose_sound.play()
 
     def update_timer(self, dt):
         """Update the timer and progress bar."""
@@ -624,7 +854,7 @@ class QuizPerkalianScreen(Screen):
         self.ids.timer_label.text = f"0:{self.time_left:02d}"
 
     def generate_question(self):
-        """Generate a new math question."""
+        """Generate a new multiplication question."""
         if self.current_question < self.total_questions:
             self.time_left = 10
             self.update_timer_label()
@@ -655,10 +885,6 @@ class QuizPerkalianScreen(Screen):
         else:
             self.end_quiz()
 
-    def update_score_label(self):
-        """Update the score label in the UI."""
-        self.ids.score_label.text = str(self.current_score)
-
     def check_answer(self, selected_answer):
         """Check if the selected answer is correct."""
         question_text = self.ids.question_label.text
@@ -670,9 +896,15 @@ class QuizPerkalianScreen(Screen):
             if int(selected_answer) == correct_answer:
                 self.current_score += 5
                 self.update_score_label()
+            else:
+                self.play_lose_sound()
             self.generate_question()
         except Exception as e:
             print(f"Error while evaluating the answer: {e}")
+
+    def update_score_label(self):
+        """Update the score label in the UI."""
+        self.ids.score_label.text = str(self.current_score)
 
     def update_score_in_store(self):
         """Update the score in the JSON store for Level 3."""
@@ -692,6 +924,33 @@ class QuizPerkalianScreen(Screen):
         """Navigate to the homepage."""
         self.manager.current = 'homepage'
 
+    def update_status_level3(self):
+        """Update status_level3 to 'Sudah selesai' in JSON store."""
+        if store.exists('user'):
+            user_data = store.get('user')
+            user_data['status_level3'] = "Sudah selesai"
+            store.put('user', **user_data)
+
+    def end_quiz(self):
+        """Handle the end of the quiz."""
+        Clock.unschedule(self.update_timer)
+        if self.timer_sound:
+            self.timer_sound.stop()
+
+        if self.win_sound:
+            self.win_sound.play()
+
+        self.update_score_in_store()
+        self.update_status_level3()
+
+        self.show_popup(
+            title="Total Score",
+            message=f"Your score is: {self.current_score}",
+            on_confirm=lambda popup: self.handle_keluar(popup),
+            confirm_text="KELUAR",
+            cancel_text=None,
+        )
+
     def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
         """Wrapper for creating and showing a popup."""
         self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
@@ -699,9 +958,6 @@ class QuizPerkalianScreen(Screen):
     def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
         """Helper to create a styled popup."""
         content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
-
-        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
-        content.add_widget(title_label_spacer)
 
         label = Label(
             text=message,
@@ -714,9 +970,6 @@ class QuizPerkalianScreen(Screen):
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
-
-        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
-        content.add_widget(label_button_spacer)
 
         button_layout = BoxLayout(
             orientation="horizontal",
@@ -743,7 +996,6 @@ class QuizPerkalianScreen(Screen):
             height=dp(80),
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
-            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
             on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
@@ -756,7 +1008,6 @@ class QuizPerkalianScreen(Screen):
                 height=dp(80),
                 background_normal="assets/BUTTON.png",
                 background_down="assets/BUTTON.png",
-                background_color=(0.7, 0.7, 0.7, 1),
                 color=(1, 1, 1, 1),
                 on_release=popup.dismiss,
             )
@@ -764,19 +1015,6 @@ class QuizPerkalianScreen(Screen):
 
         content.add_widget(button_layout)
         popup.open()
-
-    def end_quiz(self):
-        """Handle the end of the quiz."""
-        Clock.unschedule(self.update_timer)
-        self.update_score_in_store()
-
-        self.show_popup(
-            title="Total Score",
-            message=f"Your score is: {self.current_score}",
-            on_confirm=lambda popup: self.go_to_homepage(),
-            confirm_text="KELUAR",
-            cancel_text=None,
-        )
 
 class MyApp(App):
     def build(self):
