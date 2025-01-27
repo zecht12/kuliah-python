@@ -15,6 +15,7 @@ from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.core.audio import SoundLoader
 
+FONT_PATH = "assets/font/luckiestguy.ttf"
 store = JsonStore('user_data.json')
 
 def play_sound(sound_path):
@@ -92,9 +93,6 @@ class HomePage(Screen):
         """Helper to create a styled popup."""
         content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
 
-        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
-        content.add_widget(title_label_spacer)
-
         label = Label(
             text=message,
             font_size=sp(18),
@@ -102,13 +100,11 @@ class HomePage(Screen):
             valign="middle",
             size_hint=(1, None),
             height=dp(100),
-            color=(1, 1, 1, 1)
+            color=(1, 1, 1, 1),
+            font_name=FONT_PATH
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
-
-        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
-        content.add_widget(label_button_spacer)
 
         button_layout = BoxLayout(
             orientation="horizontal",
@@ -127,13 +123,8 @@ class HomePage(Screen):
             title_color=(1, 1, 1, 1),
             title_size=sp(24),
             title_align="center",
+            title_font=FONT_PATH,
         )
-
-        confirm_sound_file = "assets/musik/keluar.mp3" if confirm_text == "KELUAR" else "assets/musik/entry.mp3"
-        cancel_sound_file = "assets/musik/keluar.mp3" if cancel_text == "LANJUTKAN" else "assets/musik/batal.mp3"
-
-        confirm_sound = SoundLoader.load(confirm_sound_file)
-        cancel_sound = SoundLoader.load(cancel_sound_file)
 
         confirm_button = Button(
             text=confirm_text,
@@ -141,33 +132,26 @@ class HomePage(Screen):
             height=dp(80),
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
-            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
-            on_release=lambda *args: (
-                confirm_sound.play() if confirm_sound else None,
-                on_confirm(popup),
-                popup.dismiss()
-            ),
+            font_name=FONT_PATH,
+            on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
-
-        cancel_button = Button(
-            text=cancel_text,
-            size_hint=(1, None),
-            height=dp(80),
-            background_normal="assets/BUTTON.png",
-            background_down="assets/BUTTON.png",
-            background_color=(0.7, 0.7, 0.7, 1),
-            color=(1, 1, 1, 1),
-            on_release=lambda *args: (
-                cancel_sound.play() if cancel_sound else None,
-                popup.dismiss()
-            ),
-        )
-
         button_layout.add_widget(confirm_button)
-        button_layout.add_widget(cancel_button)
-        content.add_widget(button_layout)
 
+        if cancel_text:
+            cancel_button = Button(
+                text=cancel_text,
+                size_hint=(1, None),
+                height=dp(80),
+                background_normal="assets/BUTTON.png",
+                background_down="assets/BUTTON.png",
+                color=(1, 1, 1, 1),
+                font_name=FONT_PATH,
+                on_release=popup.dismiss,
+            )
+            button_layout.add_widget(cancel_button)
+
+        content.add_widget(button_layout)
         popup.open()
 
     def show_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
@@ -450,8 +434,8 @@ class QuizPenjumlahanScreen(Screen):
         """Membuat dan menampilkan popup."""
         self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
 
-    def create_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
-        """Helper untuk membuat popup dengan gaya tertentu."""
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
+        """Helper to create a styled popup."""
         content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
 
         label = Label(
@@ -461,7 +445,8 @@ class QuizPenjumlahanScreen(Screen):
             valign="middle",
             size_hint=(1, None),
             height=dp(100),
-            color=(1, 1, 1, 1)
+            color=(1, 1, 1, 1),
+            font_name=FONT_PATH
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
@@ -483,6 +468,7 @@ class QuizPenjumlahanScreen(Screen):
             title_color=(1, 1, 1, 1),
             title_size=sp(24),
             title_align="center",
+            title_font=FONT_PATH,
         )
 
         confirm_button = Button(
@@ -492,6 +478,7 @@ class QuizPenjumlahanScreen(Screen):
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
             color=(1, 1, 1, 1),
+            font_name=FONT_PATH,
             on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
         button_layout.add_widget(confirm_button)
@@ -504,6 +491,7 @@ class QuizPenjumlahanScreen(Screen):
                 background_normal="assets/BUTTON.png",
                 background_down="assets/BUTTON.png",
                 color=(1, 1, 1, 1),
+                font_name=FONT_PATH,
                 on_release=popup.dismiss,
             )
             button_layout.add_widget(cancel_button)
@@ -657,12 +645,9 @@ class QuizPenguranganScreen(Screen):
         """Wrapper for creating and showing a popup."""
         self.create_popup(title, message, on_confirm, confirm_text, cancel_text)
 
-    def create_popup(self, title, message, on_confirm, confirm_text="KELUAR", cancel_text="BATAL"):
+    def create_popup(self, title, message, on_confirm, confirm_text="MULAI", cancel_text="BATAL"):
         """Helper to create a styled popup."""
         content = BoxLayout(orientation="vertical", spacing=dp(5), padding=(dp(20), dp(20), dp(20), dp(20)))
-
-        title_label_spacer = Widget(size_hint=(1, None), height=dp(100))
-        content.add_widget(title_label_spacer)
 
         label = Label(
             text=message,
@@ -671,13 +656,11 @@ class QuizPenguranganScreen(Screen):
             valign="middle",
             size_hint=(1, None),
             height=dp(100),
-            color=(1, 1, 1, 1)
+            color=(1, 1, 1, 1),
+            font_name=FONT_PATH
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
-
-        label_button_spacer = Widget(size_hint=(1, None), height=dp(50))
-        content.add_widget(label_button_spacer)
 
         button_layout = BoxLayout(
             orientation="horizontal",
@@ -696,6 +679,7 @@ class QuizPenguranganScreen(Screen):
             title_color=(1, 1, 1, 1),
             title_size=sp(24),
             title_align="center",
+            title_font=FONT_PATH,
         )
 
         confirm_button = Button(
@@ -704,8 +688,8 @@ class QuizPenguranganScreen(Screen):
             height=dp(80),
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
-            background_color=(0.7, 0.7, 0.7, 1),
             color=(1, 1, 1, 1),
+            font_name=FONT_PATH,
             on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
         button_layout.add_widget(confirm_button)
@@ -717,8 +701,8 @@ class QuizPenguranganScreen(Screen):
                 height=dp(80),
                 background_normal="assets/BUTTON.png",
                 background_down="assets/BUTTON.png",
-                background_color=(0.7, 0.7, 0.7, 1),
                 color=(1, 1, 1, 1),
+                font_name=FONT_PATH,
                 on_release=popup.dismiss,
             )
             button_layout.add_widget(cancel_button)
@@ -966,7 +950,8 @@ class QuizPerkalianScreen(Screen):
             valign="middle",
             size_hint=(1, None),
             height=dp(100),
-            color=(1, 1, 1, 1)
+            color=(1, 1, 1, 1),
+            font_name=FONT_PATH
         )
         label.bind(size=label.setter('text_size'))
         content.add_widget(label)
@@ -988,6 +973,7 @@ class QuizPerkalianScreen(Screen):
             title_color=(1, 1, 1, 1),
             title_size=sp(24),
             title_align="center",
+            title_font=FONT_PATH,
         )
 
         confirm_button = Button(
@@ -997,6 +983,7 @@ class QuizPerkalianScreen(Screen):
             background_normal="assets/BUTTON.png",
             background_down="assets/BUTTON.png",
             color=(1, 1, 1, 1),
+            font_name=FONT_PATH,
             on_release=lambda *args: (on_confirm(popup), popup.dismiss()),
         )
         button_layout.add_widget(confirm_button)
@@ -1009,6 +996,7 @@ class QuizPerkalianScreen(Screen):
                 background_normal="assets/BUTTON.png",
                 background_down="assets/BUTTON.png",
                 color=(1, 1, 1, 1),
+                font_name=FONT_PATH,
                 on_release=popup.dismiss,
             )
             button_layout.add_widget(cancel_button)
